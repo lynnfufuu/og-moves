@@ -75,6 +75,22 @@ export default {
        const d = await r.json();
        return new Response(JSON.stringify(d), { headers: CORS });
     }
+      // OpenSea image proxy
+     if (url.pathname === '/opensea/image') {
+       const imgUrl = url.searchParams.get('url');
+     if (!imgUrl) return new Response('missing url', { status: 400 });
+       const r = await fetch(imgUrl, {
+         headers: { 'x-api-key': OPENSEA_KEY }
+     });
+       const blob = await r.arrayBuffer();
+      return new Response(blob, {
+         headers: {
+          'Content-Type': r.headers.get('Content-Type') || 'image/jpeg',
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'public, max-age=86400'
+    }
+    });
+    }
       return new Response(JSON.stringify({ error: 'not found' }), { status: 404, headers: CORS });
 
     } catch (err) {
