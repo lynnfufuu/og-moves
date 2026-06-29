@@ -65,7 +65,16 @@ export default {
         const d = await r.json();
         return new Response(JSON.stringify(d), { headers: CORS });
       }
-
+      // OpenSea Account Profile
+     if (url.pathname === '/opensea/account') {
+       const address = url.searchParams.get('address');
+       const r = await fetch(
+         `https://api.opensea.io/api/v2/accounts/${address}`,
+         { headers: { 'x-api-key': OPENSEA_KEY, 'accept': 'application/json' } }
+       );
+       const d = await r.json();
+       return new Response(JSON.stringify(d), { headers: CORS });
+    }
       return new Response(JSON.stringify({ error: 'not found' }), { status: 404, headers: CORS });
 
     } catch (err) {
